@@ -1,0 +1,17 @@
+{
+  "name": "card-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Henrique Antonieto <henriquebedendo10@live.com>",
+  "license": "MIT",
+  "dependencies": {
+    "csvtojson": "^2.0.10",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.13",
+    "multer": "^1.4.2",
+    "uuid": "^8.3.2"
+  },
+  "scripts": {
+    "start": "nodemon src/index.js"
+  }
+}
