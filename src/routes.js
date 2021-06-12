@@ -5,7 +5,7 @@ const invoiceController = require('./controllers/invoiceController')
 
 router.get('/', invoiceController.Home)
 router.post('/convert', invoiceController.CsvToJson)
-router.get('/process', invoiceController.ProcessJson)
+router.post('/process', invoiceController.ProcessJson)
 
 module.exports = router
 

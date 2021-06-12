@@ -3,8 +3,9 @@ const app = express()
 const router = require('./routes')
 const path = require('path');
 const mongoose = require('mongoose')
-
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
 
  //mongoose
  mongoose.Promise = global.Promise
@@ -23,6 +24,15 @@ app.get('/up', (req,res) =>{
 
 app.get('/convert', (req, res) =>{
     res.sendFile('convert.html', { root : __dirname})
+})
+
+app.get('/process', (req,res) =>{
+    res.sendFile('create.html', { root : __dirname})
+})
+
+app.post('/processar', (req, res) =>{
+    console.log(req.body)
+    res.send('olá')
 })
 
 //upload arquivos

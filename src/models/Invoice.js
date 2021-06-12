@@ -67,7 +67,7 @@ class Invoice{
             fs.writeFileSync(path, JSON.stringify(invoiceProcess) , 'utf-8')
         }
 
-        return {status: true, result: JSON.parse(fs.readFileSync(path, 'utf-8'))}
+        return {status: true, data: JSON.parse(fs.readFileSync(path, 'utf-8'))}
         
         
     }
