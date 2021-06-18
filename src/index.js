@@ -17,6 +17,7 @@ app.use(express.json())
  }).catch((err) =>{
      console.log('Erro ao se conectar ao mongoDB: ' + err)
  }) 
+ mongoose.set('useFindAndModify', false);
 
 app.get('/up', (req,res) =>{
     res.sendFile('index.html', {root: __dirname})

@@ -43,6 +43,53 @@ class invoiceController{
         }
     }
 
+    async ListInvoices(req, res){
+        dbInvoice.find().then((invoices) =>{
+            res.status(200)
+            res.json(invoices)
+        }).catch(err =>{
+            res.status(400)
+            res.json({error: "Houve um erro para listar as faturas"})
+        })
+    }
+
+    async FindInvoice(req, res){
+        dbInvoice.findOne({_id: req.params.id}).then((invoice) =>{
+            res.status(200)
+            res.json(invoice)
+        }).catch(err =>{
+            res.status(400)
+            res.json({error: "Houve um erro para lista a fatura"})
+        })
+    }
+
+    async MarkForDad(req, res){
+        dbInvoice.findOne({_id: req.params.id}).then((invoice) =>{
+            let indexf = invoice.Invoice.findIndex(i => i.id === req.params.idi)
+            if(invoice.Invoice[indexf].pai === 1){
+                invoice.Invoice[indexf].pai = 0
+            }
+            else{
+                invoice.Invoice[indexf].pai = 1
+            }
+            
+            let UpInvoice = invoice.Invoice
+        
+            invoice.Invoice = {UpInvoice}
+            invoice.Invoice = invoice.Invoice.UpInvoice
+            
+            invoice.save().then(() =>{
+                res.json(invoice)
+            })
+            
+        }).catch(error =>{
+            res.status(400)
+            res.json({error: "Houve um erro para listar a fatura ou ela não existe"})
+        })
+    }
+
+    
+
 }
 
 module.exports = new invoiceController()
