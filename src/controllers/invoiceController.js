@@ -97,8 +97,7 @@ class invoiceController{
             const {title, amount} = req.body
             const result = await Invoice.AddInvoiceDad(title, amount)
             if(!result.status){
-                res.status(400)
-                res.json({error: result.error})
+                throw result.error
             }
             else{
                 dbInvoice.findOne({_id: id}).then((invoice) =>{
@@ -114,7 +113,7 @@ class invoiceController{
                         res.json(invoice)
                     }).catch(error =>{
                         res.status(400)
-                        res.json({error: "Houve um erro para salvar a fatura"})
+                        res.json({error: error})
                     })
                 }).catch((error) =>{
                     res.status(400)
@@ -125,17 +124,82 @@ class invoiceController{
         }
         catch(error){
             res.status(400)
-            res.json({error: "Houve um erro para criar nova fatura."})
+            res.json({error: error})
         }
     }
 
     async Totalizer(req, res){
-        dbInvoice.findOne({_id: id}).then((invoice) =>{
-            invoice.Invoice
+        dbInvoice.findOne({_id: req.params.id}).then((invoice) =>{
+            let TotalCard = []
+            let TotalDad = []
+            
+            invoice.Invoice.forEach(i =>{
+                if(i.categoria != "adicional"){
+                    TotalCard.push(i.valor)
+                }
+                if(i.pai === 1){
+                    TotalDad.push(i.valor)
+                }
+            })
+
+            if(TotalCard.length < 1){
+                res.status(200)
+                res.json({TotalCard: 0, TotalDad: 0, TotalMe: 0})
+            }
+            TotalCard = TotalCard.reduce((total, amount) => total + amount) 
+            if(TotalDad.length < 1){
+                res.status(200)
+                res.json({TotalCard, TotalDad: 0, TotalMe: TotalCard})
+            }
+            TotalDad = TotalDad.reduce((total, amount) => total + amount)
+    
+            let TotalMe = TotalCard - TotalDad
+            res.status(200)
+            res.json({TotalCard, TotalDad, TotalMe})
 
         }).catch((error) =>{
             res.status(400)
             res.json({error: "Fatura não existe"})
+        })
+    }
+
+    async DeleteInvoice(req, res){
+        dbInvoice.deleteOne({_id: req.params.id}).then((invoice) =>{
+            if(invoice.n === 0){
+                throw 'Fatura não encontrada'
+            }
+            res.status(200)
+            res.json({})
+        }).catch((error) =>{
+            res.status(400)
+            res.json({error: error})
+        })
+    }
+
+    async DeleteInvoiceIn(req, res){
+        const {id, idi} = req.params
+        dbInvoice.findOne({_id: id}).then((invoice) =>{
+            let indexf = invoice.Invoice.findIndex(i => i.id === idi)
+            if(indexf < 0){
+                throw "Fatura não existe"
+            }
+
+            let updatedInvoice = invoice.Invoice
+            updatedInvoice.splice(indexf, 1)
+
+            invoice.Invoice = {updatedInvoice}
+            invoice.Invoice = invoice.Invoice.updatedInvoice
+
+            invoice.save().then(() =>{
+                res.status(200)
+                res.json(invoice)
+            }).catch(error =>{
+                res.status(400)
+                res.json({error: "Houve um erro para salvar a fatura"})
+            })
+        }).catch((error) =>{
+            res.status(400)
+            res.json({error: error})
         })
     }
 

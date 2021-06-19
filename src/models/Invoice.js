@@ -86,7 +86,7 @@ class Invoice{
     async AddInvoiceDad(title, amount){
         try{
             if(title == undefined || title == '' || !title.trim() || amount == undefined || amount == ''){
-                return {status: false, error: "Preencha todos os campos"}
+                throw "Preencha todos os campos"
             }
             else{
                 //criar data no formato 9999-99-99{
@@ -112,8 +112,7 @@ class Invoice{
             }
         }
         catch(error){
-            console.log(error)
-            return {status: false, error: "Houve um erro para salvar a fatura"}
+            return {status: false, error: error}
         }
     }
 }
