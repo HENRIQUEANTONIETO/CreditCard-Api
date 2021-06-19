@@ -11,6 +11,7 @@ router.get('/invoices', invoiceController.ListInvoices)
 router.get('/invoices/:id', invoiceController.FindInvoice)
 
 router.put('/invoices/:id/:idi', invoiceController.MarkForDad)
+router.put('/invoices/:id', invoiceController.NewInvoiceDad)
 
 module.exports = router
 

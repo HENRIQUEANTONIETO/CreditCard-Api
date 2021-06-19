@@ -12,7 +12,7 @@ class invoiceController{
         let result = await Invoice.CsvToJson()
         if(!result.status){
             res.status(400)
-            res.json(result.err)
+            res.json(result.error)
         }
         else{
             res.status(200)
@@ -24,7 +24,7 @@ class invoiceController{
         let result = await Invoice.ProcessJson()
         if(!result.status){
             res.status(400)
-            res.json(result.err)
+            res.json(result.error)
         }
         else{
             const newInvocie = {
@@ -34,8 +34,8 @@ class invoiceController{
             new dbInvoice(newInvocie).save().then(() =>{
                 res.status(200)
                 res.json({message: "Fatura salva no BD com sucesso!"})
-            }).catch((err) =>{
-                console.log(err)
+            }).catch((error) =>{
+                console.log(error)
                 res.status(400)
                 res.json({error: "Houve um erro para salvar no BD"})
             })
@@ -80,6 +80,9 @@ class invoiceController{
             
             invoice.save().then(() =>{
                 res.json(invoice)
+            }).catch(error =>{
+                res.status(400)
+                res.json({error: "Houve um erro para marcar para pai"})
             })
             
         }).catch(error =>{
@@ -88,7 +91,53 @@ class invoiceController{
         })
     }
 
-    
+    async NewInvoiceDad(req, res){
+        try{
+            const {id} = req.params
+            const {title, amount} = req.body
+            const result = await Invoice.AddInvoiceDad(title, amount)
+            if(!result.status){
+                res.status(400)
+                res.json({error: result.error})
+            }
+            else{
+                dbInvoice.findOne({_id: id}).then((invoice) =>{
+                    let newInvoice = result.data
+                    let updatedInvoice = invoice.Invoice
+                    updatedInvoice.push(newInvoice)
+
+                    invoice.Invoice = {updatedInvoice}
+                    invoice.Invoice = invoice.Invoice.updatedInvoice
+
+                    invoice.save().then(() =>{
+                        res.status(200)
+                        res.json(invoice)
+                    }).catch(error =>{
+                        res.status(400)
+                        res.json({error: "Houve um erro para salvar a fatura"})
+                    })
+                }).catch((error) =>{
+                    res.status(400)
+                    res.json({error: "Fatura não existe"})
+                })
+            }
+            
+        }
+        catch(error){
+            res.status(400)
+            res.json({error: "Houve um erro para criar nova fatura."})
+        }
+    }
+
+    async Totalizer(req, res){
+        dbInvoice.findOne({_id: id}).then((invoice) =>{
+            invoice.Invoice
+
+        }).catch((error) =>{
+            res.status(400)
+            res.json({error: "Fatura não existe"})
+        })
+    }
 
 }
 
