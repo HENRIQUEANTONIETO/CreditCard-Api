@@ -85,8 +85,11 @@ class Invoice{
 
     async AddInvoiceDad(title, amount){
         try{
-            if(title == undefined || title == '' || !title.trim() || amount == undefined || amount == ''){
-                throw "Preencha todos os campos"
+            if(title == undefined || title == '' || !title.trim()){
+                throw "Título não pode ficar vazio"
+            }
+            if(amount == undefined || amount == '' || amount <= 0){
+                throw "Valor deve ser maior que 1"
             }
             else{
                 //criar data no formato 9999-99-99{

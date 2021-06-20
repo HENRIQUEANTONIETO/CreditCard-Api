@@ -5,6 +5,7 @@
   "author": "Henrique Antonieto <henriquebedendo10@live.com>",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "csvtojson": "^2.0.10",
     "express": "^4.17.1",
     "mongoose": "^5.12.13",

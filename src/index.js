@@ -3,6 +3,8 @@ const app = express()
 const router = require('./routes')
 const path = require('path');
 const mongoose = require('mongoose')
+const cors = require('cors')
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
@@ -18,23 +20,6 @@ app.use(express.json())
      console.log('Erro ao se conectar ao mongoDB: ' + err)
  }) 
  mongoose.set('useFindAndModify', false);
-
-app.get('/up', (req,res) =>{
-    res.sendFile('index.html', {root: __dirname})
-})
-
-app.get('/convert', (req, res) =>{
-    res.sendFile('convert.html', { root : __dirname})
-})
-
-app.get('/process', (req,res) =>{
-    res.sendFile('create.html', { root : __dirname})
-})
-
-app.post('/processar', (req, res) =>{
-    console.log(req.body)
-    res.send('olá')
-})
 
 //upload arquivos
 const multer = require('multer')

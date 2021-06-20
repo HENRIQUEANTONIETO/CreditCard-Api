@@ -21,26 +21,34 @@ class invoiceController{
     }
 
     async ProcessJson(req, res){
-        let result = await Invoice.ProcessJson()
-        if(!result.status){
-            res.status(400)
-            res.json(result.error)
-        }
-        else{
-            const newInvocie = {
-                InvoiceDate: req.body.InvoiceDate,
-                Invoice: result.data
+        try{
+            let result = await Invoice.ProcessJson()
+            if(!result.status){
+                throw result.error
             }
-            new dbInvoice(newInvocie).save().then(() =>{
-                res.status(200)
-                res.json({message: "Fatura salva no BD com sucesso!"})
-            }).catch((error) =>{
-                console.log(error)
-                res.status(400)
-                res.json({error: "Houve um erro para salvar no BD"})
-            })
-            
+            if(req.body.InvoiceDate == undefined || req.body.InvoiceDate == '' || !req.body.InvoiceDate.trim()){
+                throw 'Informe a data da fatura!'
+            }
+            else{
+                const newInvocie = {
+                    InvoiceDate: req.body.InvoiceDate,
+                    Invoice: result.data
+                }
+                new dbInvoice(newInvocie).save().then((invoice) =>{
+                    res.status(200)
+                    res.json({invoice})
+                }).catch((error) =>{
+                    res.status(400)
+                    res.json({error: error})
+                })
+                
+            }
         }
+        catch(error){
+            res.status(400)
+            res.json({error: error})
+        }
+        
     }
 
     async ListInvoices(req, res){
