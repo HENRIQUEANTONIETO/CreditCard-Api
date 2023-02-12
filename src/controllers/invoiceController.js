@@ -153,11 +153,13 @@ class invoiceController{
             if(TotalCard.length < 1){
                 res.status(200)
                 res.json({TotalCard: 0, TotalDad: 0, TotalMe: 0})
+                return
             }
             TotalCard = TotalCard.reduce((total, amount) => total + amount) 
             if(TotalDad.length < 1){
                 res.status(200)
                 res.json({TotalCard, TotalDad: 0, TotalMe: TotalCard})
+                return
             }
             TotalDad = TotalDad.reduce((total, amount) => total + amount)
     

@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
 })
 
 const fileFilter = function(req, file, cb) {
-    const allowedTypes = ["application/vnd.ms-excel", "application/json"]
+    const allowedTypes = ["application/vnd.ms-excel", "application/json", "text/csv"]
   
     if (!allowedTypes.includes(file.mimetype)) {
       const error = new Error("Wrong file type")
